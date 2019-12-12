@@ -11,6 +11,8 @@ public class MetodoSimplex {
     public static ArrayList<Ecuacion> ecuaciones = new ArrayList<>();
 
     public static void main(String[] args) {
+        Interfaz form = new Interfaz();
+        form.setVisible(true);
 //        Ecuacion funObj = new Ecuacion(); // Funcion Objetivo
 //        funObj.incognita.add(2d);
 //        funObj.incognita.add(3d);
