@@ -1,15 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package metodosimplex;
 
+import com.sun.media.sound.ModelOscillator;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
- *
  * @author Wargosh
  */
 public class Interfaz extends javax.swing.JFrame {
+
+    ArrayList<Ecuacion> ecuacionesI = new ArrayList<>();
 
     /**
      * Creates new form Interfaz
@@ -28,32 +32,74 @@ public class Interfaz extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblResul = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        cbxOpcion = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
+        btnEmpezar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        btnNuevo = new javax.swing.JButton();
+        txtFuncionObjetivo = new javax.swing.JLabel();
+        txtRestricciones = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblResul.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblResul.setEnabled(false);
+        tblResul.setFocusable(false);
+        jScrollPane1.setViewportView(tblResul);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("MÉTODO SIMPLEX");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "MAXIMIZAR", "MINIMIZAR" }));
+        cbxOpcion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "MAXIMIZAR", "MINIMIZAR" }));
+        cbxOpcion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxOpcionActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Se busca:");
+
+        btnEmpezar.setText("EMPEZAR");
+        btnEmpezar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEmpezarMouseClicked(evt);
+            }
+        });
+        btnEmpezar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmpezarActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setText("Función Objetivo:");
+
+        btnNuevo.setText("Nuevo Problema");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        txtFuncionObjetivo.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        txtFuncionObjetivo.setText("jLabel4");
+
+        txtRestricciones.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        txtRestricciones.setText("<html>5x1 &lt;= 6<br/>7x1 + 6x2 >= 5</html>");
+        txtRestricciones.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel6.setText("Restricciones:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,77 +107,241 @@ public class Interfaz extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(23, 23, 23)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(269, 269, 269)
-                        .addComponent(jLabel1)))
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6))
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtRestricciones, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                                    .addComponent(txtFuncionObjetivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(17, 17, 17)
+                                .addComponent(btnEmpezar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnNuevo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbxOpcion, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                    .addComponent(cbxOpcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(btnNuevo))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtFuncionObjetivo))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 60, Short.MAX_VALUE)
+                                .addComponent(btnEmpezar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtRestricciones))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btnEmpezarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpezarMouseClicked
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Interfaz().setVisible(true);
+    }//GEN-LAST:event_btnEmpezarMouseClicked
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        btnEmpezar.setEnabled(false);
+
+        DefaultTableModel modelo = (DefaultTableModel) tblResul.getModel();
+        modelo.setRowCount(0);
+        modelo.setColumnCount(0);
+        tblResul.setModel(modelo);
+
+        ecuacionesI = new ArrayList<>();
+        Ecuacion fun_Obj = new Ecuacion();
+        try {
+            int n = 0;
+            do {
+                n = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el número de variables iniciales:"));
+            } while (n <= 1); // evitar negativos (debe tener como minimo 2 veriables)
+            if (n > 1) { // 
+
+            } else {
+                return;
             }
-        });
-    }
+            int[] funObj = new int[n];
+            txtFuncionObjetivo.setText("");
+            for (int i = 0; i < n; i++) {
+                funObj[i] = Integer.parseInt(JOptionPane.showInputDialog("Ingrese x" + (i + 1)));
+                // presentación
+                if (funObj[i] > -1) {
+                    txtFuncionObjetivo.setText(txtFuncionObjetivo.getText() + " + " + funObj[i] + "x" + (i + 1));
+                } else {
+                    txtFuncionObjetivo.setText(txtFuncionObjetivo.getText() + "  " + funObj[i] + "x" + (i + 1));
+                }
+                fun_Obj.incognita.add(Double.parseDouble(funObj[i] + ""));
+            }
+            fun_Obj.igualdad = Double.parseDouble(JOptionPane.showInputDialog("Ingrese igualdad"));
+            ecuacionesI.add(fun_Obj);
+            do {
+                n = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el número de RESTRICCIONES:"));
+            } while (n <= 0); // evitar negativos (debe tener como minimo 2 veriables)
+            int r = 0;
+            txtRestricciones.setText("<html>");
+            for (int i = 0; i < n; i++) { //
+                Ecuacion restriccion = new Ecuacion();
+                for (int j = 0; j < funObj.length; j++) {
+                    r = Integer.parseInt(JOptionPane.showInputDialog("Ingrese x" + (j + 1) + " de la restricción " + (i + 1)));
+                    if (r > -1) {
+                        txtRestricciones.setText(txtRestricciones.getText() + " + " + r + "x" + (j + 1));
+                    } else {
+                        txtRestricciones.setText(txtRestricciones.getText() + "   " + r + "x" + (j + 1));
+                    }
+                    restriccion.incognita.add(Double.parseDouble(r + ""));
+                }
+                r = 0; // obtener condición
+                do {
+                    r = Integer.parseInt(JOptionPane.showInputDialog("Ingrese # de la condición:\n1 = Menor o igual\n2 = Igual\n3 = Mayor o igual"));
+                } while (r < 1 || r > 3);
+                switch (r) {
+                    case 1:
+                        txtRestricciones.setText(txtRestricciones.getText() + " &lt;= ");
+                        restriccion.condicion = -1;
+                        break;
+                    case 2:
+                        txtRestricciones.setText(txtRestricciones.getText() + " = ");
+                        restriccion.condicion = 0;
+                        break;
+                    case 3:
+                        txtRestricciones.setText(txtRestricciones.getText() + " >= ");
+                        restriccion.condicion = 1;
+                        break;
+                }
+                r = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el valor de la igualdad"));
+                restriccion.igualdad = new Double(r);
+                txtRestricciones.setText(txtRestricciones.getText() + " " + r);
+                txtRestricciones.setText(txtRestricciones.getText() + "<br>");
+                ecuacionesI.add(restriccion);
+            }
+            txtRestricciones.setText(txtRestricciones.getText() + "</html>");
+
+            btnEmpezar.setEnabled(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Solo se aceptan números.\n" + e.toString(), "ERROR", 0);
+        }
+
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void cbxOpcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxOpcionActionPerformed
+        MetodoSimplex.opcion = cbxOpcion.getSelectedItem().toString();
+    }//GEN-LAST:event_cbxOpcionActionPerformed
+
+    private void btnEmpezarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpezarActionPerformed
+        MetodoSimplex.BorrarLista();
+        btnEmpezar.setEnabled(false);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("Ecuaciones chidas... : " + ecuacionesI.size());
+        MetodoSimplex.ecuaciones = ecuacionesI; // da el nuevo valor de las ecuaciones actuales
+        MetodoSimplex.opcion = cbxOpcion.getSelectedItem().toString(); // establece si es de MIN o MAX la fun_objetivo
+
+        DefaultTableModel modelo = (DefaultTableModel) tblResul.getModel();
+        modelo.setRowCount(0);
+        modelo.setColumnCount(0);
+        tblResul.setModel(modelo);
+
+        ArrayList<Ecuacion> estandar = MetodoSimplex.EstandarizarEcuaciones();
+
+        // CREAR COLUMNAS
+        modelo.addColumn("Pivote"); // Columna pivotes
+        for (int i = 1; i < estandar.get(0).incognita.size() + 1; i++) {
+            modelo.addColumn("x" + i); // Columnas variables
+        }
+        modelo.addColumn(" = "); // Columna igualdad
+
+        // LLENAR FILAS
+        for (int i = 1; i < estandar.size(); i++) { // recorrer restricciones
+            Object[] row = new Object[estandar.get(i).incognita.size() + 2];
+            row[0] = "x" + (estandar.get(i).pivote + 1);
+            for (int j = 0; j < estandar.get(i).incognita.size(); j++) {
+                row[j + 1] = "" + estandar.get(i).incognita.get(j);
+            }
+            row[row.length - 1] = estandar.get(i).igualdad;
+            modelo.addRow(row);
+        }
+        // escribir funcion objetivo
+        Object[] row = new Object[estandar.get(0).incognita.size() + 2];
+        row[0] = " Z ";
+        for (int i = 0; i < estandar.get(0).incognita.size(); i++) {
+            row[i + 1] = "" + estandar.get(0).incognita.get(i);
+        }
+        row[row.length - 1] = estandar.get(0).igualdad;
+        modelo.addRow(row);
+
+        tblResul.setModel(modelo);
+        Object[] vacio = new Object[tblResul.getColumnCount()];
+        modelo.addRow(vacio);
+        // llenar iteracciones en la tabla
+        while (MetodoSimplex.VerificarFinal()) {
+            ArrayList<Ecuacion> iteracciones = MetodoSimplex.ResolverEcuacionesInterfaz();
+            // LLENAR FILAS
+            System.out.println(iteracciones.size());
+            for (int i = 1; i < iteracciones.size(); i++) { // recorrer restricciones
+                Object[] rowR = new Object[iteracciones.get(i).incognita.size() + 2];
+                rowR[0] = "x" + (iteracciones.get(i).pivote + 1);
+                for (int j = 0; j < iteracciones.get(i).incognita.size(); j++) {
+                    rowR[j + 1] = "" + iteracciones.get(i).incognita.get(j);
+                }
+                rowR[rowR.length - 1] = iteracciones.get(i).igualdad;
+                modelo.addRow(rowR);
+            }
+            // escribir funcion objetivo
+            Object[] rowFun = new Object[iteracciones.get(0).incognita.size() + 2];
+            rowFun[0] = " Z ";
+            for (int i = 0; i < iteracciones.get(0).incognita.size(); i++) {
+                rowFun[i + 1] = "" + iteracciones.get(0).incognita.get(i);
+            }
+            rowFun[rowFun.length - 1] = iteracciones.get(0).igualdad;
+            modelo.addRow(rowFun);
+
+            modelo.addRow(vacio);
+        }
+    }//GEN-LAST:event_btnEmpezarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton btnEmpezar;
+    private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox cbxOpcion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblResul;
+    private javax.swing.JLabel txtFuncionObjetivo;
+    private javax.swing.JLabel txtRestricciones;
     // End of variables declaration//GEN-END:variables
 }
